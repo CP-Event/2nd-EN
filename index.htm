@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Compliance Quiz</title>
+    <style>
+        /* [Standard Guide] Background & Layout */
+        body { 
+            font-family: 'Pretendard', -apple-system, sans-serif; 
+            background-color: #f2f9f2; 
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; color: #333;
+        }
+
+        .container { 
+            max-width: 650px; width: 95%; background: white; 
+            padding: 40px; border-radius: 30px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06); text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%; height: 6px; background: #eee;
+            border-radius: 10px; margin-bottom: 30px; display: none;
+        }
+        .progress-bar {
+            width: 0%; height: 100%; background: #78a878;
+            border-radius: 10px; transition: width 0.3s ease;
+        }
+
+        .event-tag { text-align: left; color: #78a878; font-weight: bold; margin-bottom: 20px; }
+        .main-title { font-size: 2.2rem; color: #2c3e50; margin-bottom: 60px; line-height: 1.4; font-weight: 800; }
+        
+        /* Button Styles */
+        .start-btn, .link-btn, .next-btn, .prev-btn { 
+            border: none; padding: 18px 25px; 
+            font-size: 1.1rem; font-weight: bold; border-radius: 50px; 
+            cursor: pointer; transition: all 0.2s;
+            text-decoration: none; display: inline-block;
+        }
+        .start-btn { background: #3498db; color: white; box-shadow: 0 5px 0 #2980b9; padding: 20px 70px; }
+        
+        /* Navigation Button Group */
+        .nav-btn-group { 
+            display: none; 
+            justify-content: center; gap: 12px; margin-top: 25px; 
+        }
+        
+        .prev-btn { background: #95a5a6; color: white; box-shadow: 0 5px 0 #7f8c8d; }
+        .next-btn { background: #62b565; color: white; box-shadow: 0 5px 0 #4a8d4c; }
+        .link-btn { background: #3498db; color: white; box-shadow: 0 5px 0 #2980b9; padding: 20px 40px; line-height: 1.3; }
+
+        .start-btn:active, .next-btn:active, .prev-btn:active, .link-btn:active { transform: translateY(4px); box-shadow: none; }
+
+        /* Section Control */
+        .content-section { display: none; }
+        .quiz-header { font-size: 1.4rem; font-weight: bold; margin-bottom: 25px; color: #34495e; border-bottom: 2px solid #f2f9f2; padding-bottom: 10px; text-align: left; }
+        .comic-frame { width: 100%; border-radius: 15px; overflow: hidden; margin-bottom: 25px; border: 1px solid #eee; background: #fafafa; }
+        .comic-img { width: 100%; height: auto; display: block; }
+        .question { font-size: 1.25rem; font-weight: bold; margin-bottom: 30px; line-height: 1.6; }
+
+        .btn-box { display: flex; gap: 15px; justify-content: center; }
+        .ans-btn { flex: 1; padding: 20px; font-size: 1.4rem; border: none; border-radius: 15px; cursor: pointer; color: white; font-weight: bold; transition: 0.2s; }
+        .btn-o { background: #5dade2; box-shadow: 0 5px 0 #3498db; }
+        .btn-x { background: #ff7675; box-shadow: 0 5px 0 #d63031; }
+
+        .answer-box { display: none; margin-top: 25px; padding: 20px; border-radius: 15px; text-align: left; line-height: 1.7; animation: fadeIn 0.4s; }
+        .code-highlight { color: #007bff; font-size: 2.5rem; font-weight: 900; margin: 20px 0; display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-container" id="prog-wrap"><div class="progress-bar" id="prog-bar"></div></div>
+
+    <section id="intro-page" class="content-section" style="display: block;">
+        <div class="event-tag">2nd Compliance Event</div>
+        <h1 class="main-title">Real Situations Faced by Colleagues:<br>Compliance Yes or No Quiz</h1>
+        <button type="button" class="start-btn" onclick="navTo('ep1-page', 1)">START</button>
+    </section>
+
+    <section id="ep1-page" class="content-section">
+        <div class="quiz-header">⚖️ Q1: External Lecture Requests with Income</div>
+        <div class="comic-frame"><img src="EN_1.png" class="comic-img"></div>
+        <p class="question">Is it permissible to accept an external lecture request that generates income (e.g., advisory fees)<br> if official company approval is obtained?</p>
+        <div class="btn-box">
+            <button class="ans-btn btn-o" onclick="checkAnswer(1, true)">Yes</button>
+            <button class="ans-btn btn-x" onclick="checkAnswer(1, false)">No</button>
+        </div>
+        <div id="ans-1" class="answer-box"></div>
+        <div id="nav-1" class="nav-btn-group">
+            <button class="next-btn" onclick="navTo('ep2-page', 2)">Next Question ➔</button>
+        </div>
+    </section>
+
+    <section id="ep2-page" class="content-section">
+        <div class="quiz-header">⚖️ Q2: Requesting Technical Data from Korean Partners <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Overseas project site</div>
+        <div class="comic-frame"><img src="EN_2.png" class="comic-img"></div>
+        <p class="question">Should the Korean Subcontracting Act be applied when transacting with Korean partners at an overseas project site?</p>
+        <div class="btn-box">
+            <button class="ans-btn btn-o" onclick="checkAnswer(2, true)">Yes</button>
+            <button class="ans-btn btn-x" onclick="checkAnswer(2, false)">No</button>
+        </div>
+        <div id="ans-2" class="answer-box"></div>
+        <div id="nav-2" class="nav-btn-group">
+            <button class="prev-btn" onclick="navTo('ep1-page', 1)">◀ Previous</button>
+            <button class="next-btn" onclick="navTo('ep3-page', 3)">Next Question ➔</button>
+        </div>
+    </section>
+
+    <section id="ep3-page" class="content-section">
+        <div class="quiz-header">⚖️ Q3: Client's Request to Review Competitor Data</div>
+        <div class="comic-frame"><img src="EN_3.png" class="comic-img"></div>
+        <p class="question">If a client asks us to review technical data submitted by a competitor, is it okay to accept the request?</p>
+        <div class="btn-box">
+            <button class="ans-btn btn-o" onclick="checkAnswer(3, false)">Yes</button>
+            <button class="ans-btn btn-x" onclick="checkAnswer(3, true)">No</button>
+        </div>
+        <div id="ans-3" class="answer-box"></div>
+        <div id="nav-3" class="nav-btn-group">
+            <button class="prev-btn" onclick="navTo('ep2-page', 2)">◀ Previous</button>
+            <button class="next-btn" onclick="navTo('ep4-page', 4)">Next Question ➔</button>
+        </div>
+    </section>
+
+    <section id="ep4-page" class="content-section">
+        <div class="quiz-header">⚖️ Q4: Meetings with Korea Competitors for Overseas <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Projects</div>
+        <div class="comic-frame"><img src="EN_4.png" class="comic-img"></div>
+        <p class="question">Is it acceptable to exchange information with Korea competitors regarding an overseas project bid?</p>
+        <div class="btn-box">
+            <button class="ans-btn btn-o" onclick="checkAnswer(4, false)">Yes</button>
+            <button class="ans-btn btn-x" onclick="checkAnswer(4, true)">No</button>
+        </div>
+        <div id="ans-4" class="answer-box"></div>
+        <div id="nav-4" class="nav-btn-group">
+            <button class="prev-btn" onclick="navTo('ep3-page', 3)">◀ Previous</button>
+            <button class="next-btn" onclick="navTo('ep5-page', 5)">Next Question ➔</button>
+        </div>
+    </section>
+
+    <section id="ep5-page" class="content-section">
+        <div class="quiz-header">⚖️ Q5: Monetary Gift for a Colleague whose Father is a <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Public Official</div>
+        <div class="comic-frame"><img src="EN_5.png" class="comic-img"></div>
+        <p class="question">If a colleague's father is a public official, is the colleague himself subject to the Korea Anti-Graft Act regulations regarding wedding gifts?</p>
+        <div class="btn-box">
+            <button class="ans-btn btn-o" onclick="checkAnswer(5, false)">Yes</button>
+            <button class="ans-btn btn-x" onclick="checkAnswer(5, true)">No</button>
+        </div>
+        <div id="ans-5" class="answer-box"></div>
+        <div id="nav-5" class="nav-btn-group">
+            <button class="prev-btn" onclick="navTo('ep4-page', 4)">◀ Previous</button>
+            <button class="next-btn" onclick="navTo('ep6-page', 6)">Next Question ➔</button>
+        </div>
+    </section>
+
+    <section id="ep6-page" class="content-section">
+        <div class="quiz-header">⚖️ Q6: Providing Company Business Cards to External <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agents</div>
+        <div class="comic-frame"><img src="EN_6.png" class="comic-img"></div>
+        <p class="question">Is it permissible to provide an external agent with a business card featuring our company logo?</p>
+        <div class="btn-box">
+            <button class="ans-btn btn-o" onclick="checkAnswer(6, false)">Yes</button>
+            <button class="ans-btn btn-x" onclick="checkAnswer(6, true)">No</button>
+        </div>
+        <div id="ans-6" class="answer-box"></div>
+        <div id="nav-6" class="nav-btn-group">
+            <button class="prev-btn" onclick="navTo('ep5-page', 5)">◀ Previous</button>
+            <button class="next-btn" onclick="navTo('outro-page', 7)">View Results ➔</button>
+        </div>
+    </section>
+
+    <section id="outro-page" class="content-section">
+        <div class="event-tag">Finish</div>
+        <div style="font-size:1.2rem; line-height:1.8; margin-bottom:40px;">
+            Thank you for checking out the concerns your colleagues have shared.<br>
+            We hope this helps in your daily operations. Great job!
+        </div>
+        <div>Your Event Participation Code is <span class="code-highlight">777</span></div>
+        <div class="nav-btn-group" style="display: flex;">
+            <button class="prev-btn" onclick="navTo('ep6-page', 6)">◀ Back to Quiz</button>
+            <a href="http://seccep.secc.samsung.co.kr:84/secc/survey/surveyAnswerLogin.do?surid=NAANgvq4zKcnj+CwNKWhYWAl1eyFrk54zw8YxGdSFbo=" target="_blank" class="link-btn">Go to enter the participation code</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    const totalSteps = 6;
+
+    function navTo(targetId, step) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(s => s.style.display = 'none');
+        const target = document.getElementById(targetId);
+        if (target) target.style.display = 'block';
+
+        const progWrap = document.getElementById('prog-wrap');
+        const progBar = document.getElementById('prog-bar');
+        if(step >= 1 && step <= totalSteps) {
+            progWrap.style.display = 'block';
+            progBar.style.width = (step / totalSteps * 100) + '%';
+        } else {
+            progWrap.style.display = 'none';
+        }
+        window.scrollTo(0,0);
+    }
+
+    function checkAnswer(num, isCorrect) {
+        const box = document.getElementById('ans-' + num);
+        const navGroup = document.getElementById('nav-' + num);
+        
+        const feedback = {
+            1: ["✅ Correct! <span style='color: red;'>External lectures are allowed if official company approval is obtained regarding the content and honorarium.</span><br> Compliance with employment rules and employee guidelines is required, ensuring no company secrets are disclosed. According to employment rules, employees must strictly observe duty-related confidentiality and are prohibited from engaging in other business or profit-making ventures without permission. Violations may lead to disciplinary action. Additionally, guidelines prohibit 'unfairly' gaining property benefits from companies with existing or potential business relationships.", "❌ Incorrect! It is permissible if internal standards are followed and<br> company approval is obtained.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Please click 'Yes' to see the full explanation)"],
+            2: ["✅ Correct! <span style='color: red;'>Even for overseas projects, if the subcontractor is a Korean entity subject to the Subcontracting Act, the Act applies.</span><br> Therefore, regulations such as the prohibition of requesting technical data without justifiable cause, issuing written requests, and signing non-disclosure agreements (NDA) must be observed. However, the Act does not apply if the subcontractor is a foreign entity established under foreign laws. Note that if the transaction appears to be between foreign entities but the actual negotiating and performing entities are domestic, the Act may still apply. Regulation under local laws must also be verified.", "❌ Incorrect! In this specific case, the domestic Subcontracting Act applies.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Please click 'Yes' to see the full explanation)"],
+            3: ["✅ Correct! Reviewing competitor data is dangerous.<br> <span style='color: red;'>Reviewing a competitor's bid documents without their explicit consent may constitute a violation of trade secret protection laws.</span> Even if the client provides the data, if it is against the competitor's will, it can cause legal issues. Furthermore, simply receiving documents that are determined to be trade secrets can be problematic even if you do not proceed with the review. Extreme caution is required.", "❌ Incorrect! You must not accept this request.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Please click 'No' to see the full explanation)"],
+            4: ["✅ Correct! <span style='color: red;'>Contacting competitors in a way that could be perceived as collusion is strictly prohibited.</span><br> Anti-collusion laws are not limited to domestic law; most countries worldwide prohibit it. Therefore, overseas project bids should be treated with the same level of caution. Recently, even the exchange of information itself has been regulated as collusion in some cases. Collusive contact is absolutely forbidden. However, non-collusive contact or meetings are not unconditionally banned, provided internal compliance reporting standards are followed.", "❌ Incorrect! Contact that could be seen as collusion is never allowed.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Please click 'No' to see the full explanation)"],
+            5: ["✅ Correct! The Anti-Graft Act does not apply in this specific scenario.<br> <span style='color: red;'>The Korean Anti-Graft Act regulates benefits received by public officials themselves or their spouses.</span> Since the colleague getting married is not a public official, the Act does not apply to her wedding gift. Therefore, a gift exceeding 50,000 KRW is permissible. However, if the colleague herself were a public official or the spouse of one, the limits set by the enforcement decree must be observed (usually 50,000 KRW for cash gifts). Providing any gift to those with direct interests (permits, investigations, etc.) is strictly prohibited.", "❌ Incorrect! The colleague is not a subject of the Anti-Graft Act.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Please click 'No' to see the full explanation)"],
+            6: ["✅ Correct! It is inappropriate to allow an agent to use our company business cards or any insignia indicating an official affiliation.<br> <span style='color: red;'>This is because it could serve as evidence to extend legal liability to our company if the agent violates any laws.</span> If a legal issue arises, the fact that the agent used our logo could be misconstrued as the agent acting under our direction rather than independently. If such a request arises in the field, consultation with the legal team or relevant departments is required beforehand.", "❌ Incorrect! Providing company business cards is inappropriate.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Please click 'No' to see the full explanation)"]
+        };
+
+        const [correctMsg, wrongMsg] = feedback[num];
+        box.style.display = 'block';
+        box.style.background = isCorrect ? "#ebfbee" : "#fff5f5";
+        box.style.border = "2px solid " + (isCorrect ? "#4caf50" : "#f44336");
+        box.innerHTML = `<strong>${isCorrect ? correctMsg : wrongMsg}</strong>`;
+        
+        if(navGroup) navGroup.style.display = 'flex';
+        box.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
